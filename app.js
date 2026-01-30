@@ -38,24 +38,28 @@ document.addEventListener("DOMContentLoaded", () => {
   if (drawer) drawer.setAttribute("aria-hidden", "true");
 
   const openDrawer = () => {
-    drawer?.classList.add("is-open");
-    drawer?.setAttribute("aria-hidden", "false");
+    if (!drawer) return;
+    drawer.classList.add("is-open");
+    drawer.setAttribute("aria-hidden", "false");
     if (overlay) {
       overlay.hidden = false;
       overlay.classList.add("is-visible");
     }
     document.body.classList.add("drawer-open");
     document.body.style.overflow = "hidden";
-    menuToggle?.setAttribute("aria-expanded", "true");
+    if (menuToggle) menuToggle.setAttribute("aria-expanded", "true");
   };
 
   const closeDrawer = () => {
-    drawer?.classList.remove("is-open");
-    drawer?.setAttribute("aria-hidden", "true");
-    overlay?.classList.remove("is-visible");
+    if (!drawer) return;
+    drawer.classList.remove("is-open");
+    drawer.setAttribute("aria-hidden", "true");
+    if (overlay) {
+      overlay.classList.remove("is-visible");
+    }
     document.body.classList.remove("drawer-open");
     document.body.style.overflow = "";
-    menuToggle?.setAttribute("aria-expanded", "false");
+    if (menuToggle) menuToggle.setAttribute("aria-expanded", "false");
     if (overlay) {
       setTimeout(() => {
         overlay.hidden = true;
@@ -63,14 +67,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  menuToggle?.addEventListener("click", () => {
-    const isOpen = drawer?.classList.contains("is-open");
-    if (isOpen) {
-      closeDrawer();
-    } else {
-      openDrawer();
-    }
-  });
+  if (menuToggle) {
+    menuToggle.addEventListener("click", (e) => {
+      e.preventDefault();
+      const isOpen = drawer?.classList.contains("is-open");
+      if (isOpen) {
+        closeDrawer();
+      } else {
+        openDrawer();
+      }
+    });
+  }
 
   drawerClose?.addEventListener("click", closeDrawer);
   overlay?.addEventListener("click", closeDrawer);
