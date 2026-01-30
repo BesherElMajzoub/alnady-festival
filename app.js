@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const drawer = document.getElementById("mobileMenu");
   const overlay = document.querySelector(".drawer-overlay");
   const menuToggle = document.querySelector(".menu-toggle");
-  const mobileLinks = drawer ? drawer.querySelectorAll("a") : [];
+  const drawerClose = document.querySelector(".drawer-close");
+  const mobileLinks = drawer ? drawer.querySelectorAll(".mobile-nav a") : [];
   if (drawer) drawer.setAttribute("aria-hidden", "true");
 
   const openDrawer = () => {
@@ -44,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
       overlay.classList.add("is-visible");
     }
     document.body.classList.add("drawer-open");
+    document.body.style.overflow = "hidden";
     menuToggle?.setAttribute("aria-expanded", "true");
   };
 
@@ -52,11 +54,12 @@ document.addEventListener("DOMContentLoaded", () => {
     drawer?.setAttribute("aria-hidden", "true");
     overlay?.classList.remove("is-visible");
     document.body.classList.remove("drawer-open");
+    document.body.style.overflow = "";
     menuToggle?.setAttribute("aria-expanded", "false");
     if (overlay) {
       setTimeout(() => {
         overlay.hidden = true;
-      }, 220);
+      }, 300);
     }
   };
 
@@ -69,8 +72,37 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  drawerClose?.addEventListener("click", closeDrawer);
   overlay?.addEventListener("click", closeDrawer);
-  mobileLinks.forEach((link) => link.addEventListener("click", closeDrawer));
+  
+  // Close drawer and smooth scroll to section with offset correction
+  mobileLinks.forEach((link) => {
+    link.addEventListener("click", (e) => {
+      const href = link.getAttribute("href");
+      if (href && href.startsWith("#")) {
+        e.preventDefault();
+        closeDrawer();
+        
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+          setTimeout(() => {
+            const headerHeight = document.querySelector(".site-header")?.offsetHeight || 80;
+            const targetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight - 20;
+            
+            window.scrollTo({
+              top: targetPosition,
+              behavior: "smooth"
+            });
+          }, 320);
+        }
+      } else {
+        closeDrawer();
+      }
+    });
+  });
+  
   window.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeDrawer();
   });
