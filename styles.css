@@ -289,6 +289,14 @@ section {
   justify-content: center;
   transition: all 0.2s ease;
 }
+@media (max-width: 979px) {
+  .menu-toggle,
+  .mobile-drawer,
+  .drawer-overlay {
+    display: none !important;
+  }
+}
+
 
 .drawer-close:hover {
   background: rgba(11, 110, 79, 0.08);
@@ -301,6 +309,7 @@ section {
 }
 
 .mobile-nav {
+  display: none;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -310,6 +319,7 @@ section {
 }
 
 .mobile-nav a {
+  
   padding: 14px 16px;
   border-radius: var(--radius-sm);
   color: var(--text);
